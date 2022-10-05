@@ -6,6 +6,7 @@ import {
   Modal,
   TextInput,
   Alert,
+  StyleSheet,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -14,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 /* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
 
-export default function App() {
+const App = () => {
   const intialState = {
     id: 0,
     title: '',
@@ -67,15 +68,7 @@ export default function App() {
 
   const displayTodo = item => (
     <TouchableOpacity
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        borderBottomColor: 'black',
-        borderBottomWidth: 1,
-        paddingVertical: 16,
-      }}
+      style={styles.todoList}
       onPress={() =>
         Alert.alert(`${item.title}`, `${item.description}`, [
           {
@@ -95,7 +88,7 @@ export default function App() {
       />
       <Text
         style={{
-          color: '#000',
+          color: 'black',
           width: '90%',
           fontSize: 16,
           textDecorationLine: item.completed ? 'line-through' : 'none',
@@ -107,37 +100,25 @@ export default function App() {
 
   return (
     <View style={{paddingHorizontal: 20}}>
-      <View
-        style={{
-          paddingVertical: 20,
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
+      <View style={styles.display}>
         <View>
-          <Text style={{color: '#000', fontWeight: 'bold', fontSize: 28}}>
-            Hai, David. 👋
-          </Text>
-          <Text style={{fontSize: 16}}>
+          <Text style={styles.name}>Hai, David. 👋</Text>
+          <Text style={styles.activity}>
             {todo.length} {todo.length == 1 ? 'task' : 'tasks'} for you
           </Text>
         </View>
       </View>
 
-      <Text style={{color: '#000', fontSize: 28, fontWeight: 'bold'}}>
-        Todo
-      </Text>
+      <Text style={styles.header}>Todo</Text>
       <ScrollView>
-        <View style={{height: 250}}>
+        <View style={styles.scrollView}>
           {todo.map(item => (!item.completed ? displayTodo(item) : null))}
         </View>
       </ScrollView>
 
-      <Text style={{color: '#000', fontSize: 28, fontWeight: 'bold'}}>
-        Completed
-      </Text>
+      <Text style={styles.header}>Completed</Text>
       <ScrollView>
-        <View style={{height: 250}}>
+        <View style={styles.scrollView}>
           {todo.map(item => (item.completed ? displayTodo(item) : null))}
         </View>
       </ScrollView>
@@ -145,16 +126,8 @@ export default function App() {
       <View style={{width: '100%', alignItems: 'flex-end'}}>
         <TouchableOpacity
           onPress={() => setShowModal(true)}
-          style={{
-            backgroundColor: 'blue',
-            borderRadius: 100,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: 60,
-          }}>
-          <Text style={{fontSize: 46, color: 'white'}}>+</Text>
+          style={styles.addTodo}>
+          <Text style={styles.textAddTodo}>+</Text>
         </TouchableOpacity>
       </View>
 
@@ -162,70 +135,98 @@ export default function App() {
         animationType="slide"
         visible={showModal}
         onRequestClose={() => setShowModal(false)}>
-        <View style={{paddingHorizontal: 20}}>
-          <View
-            style={{
-              paddingVertical: 20,
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
+        <View style={styles.modal}>
+          <View style={styles.modalView}>
             <View>
-              <Text style={{color: '#000', fontWeight: 'bold', fontSize: 28}}>
-                Hai, David. 👋
-              </Text>
-              <Text style={{fontSize: 16}}>
+              <Text style={styles.name}>Hai, David. 👋</Text>
+              <Text style={styles.activity}>
                 {todo.length} {todo.length == 1 ? 'task' : 'tasks'} for you
               </Text>
             </View>
           </View>
 
-          <Text
-            style={{
-              color: '#000',
-              fontSize: 28,
-              fontWeight: 'bold',
-              marginVertical: 10,
-            }}>
-            Add a Todo
-          </Text>
+          <Text style={styles.header}>Add a Todo</Text>
           <TextInput
             placeholder="Title"
             value={newTodo.title}
             onChangeText={title => handleChange('title', title)}
-            style={{
-              backgroundColor: 'rgb(240, 240, 240)',
-              paddingHorizontal: 10,
-              borderRadius: 10,
-              marginVertical: 10,
-            }}
+            style={styles.inputTodo}
           />
           <TextInput
             placeholder="Description"
             value={newTodo.description}
             onChangeText={desc => handleChange('description', desc)}
-            style={{
-              backgroundColor: 'rgb(240, 240, 240)',
-            }}
+            style={styles.inputDescription}
             multiline={true}
             numberOfLines={4}
           />
 
-          <View style={{width: '100%', alignItems: 'center', marginTop: 10}}>
-            <TouchableOpacity
-              onPress={addTodo}
-              style={{
-                backgroundColor: 'blue',
-                width: 100,
-                borderRadius: 10,
-                alignItems: 'center',
-                padding: 10,
-              }}>
-              <Text style={{fontSize: 22, color: 'white'}}>Add</Text>
+          <View style={styles.viewButtonAddTodo}>
+            <TouchableOpacity onPress={addTodo} style={styles.buttonAddTodo}>
+              <Text style={styles.textButtonAddTodo}>Add</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  todoList: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    paddingVertical: 16,
+  },
+  display: {
+    paddingVertical: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  name: {color: 'black', fontWeight: 'bold', fontSize: 28},
+  activity: {fontSize: 16},
+  header: {color: 'black', fontSize: 28, fontWeight: 'bold'},
+  scrollView: {height: 250},
+  addTodo: {
+    backgroundColor: 'blue',
+    borderRadius: 100,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 60,
+  },
+  textAddTodo: {fontSize: 46, color: 'white'},
+  modal: {paddingHorizontal: 20},
+  modalView: {
+    paddingVertical: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  inputTodo: {
+    backgroundColor: 'rgb(240, 240, 240)',
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    marginVertical: 10,
+  },
+  inputDescription: {
+    backgroundColor: 'rgb(240, 240, 240)',
+  },
+  viewButtonAddTodo: {width: '100%', alignItems: 'center', marginTop: 10},
+  buttonAddTodo: {
+    backgroundColor: 'blue',
+    width: 100,
+    borderRadius: 10,
+    alignItems: 'center',
+    padding: 10,
+  },
+  textButtonAddTodo: {fontSize: 22, color: 'white'},
+});
+
+export default App;
